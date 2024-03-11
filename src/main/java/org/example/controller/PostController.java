@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.audit.Audit;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,16 +17,19 @@ public class PostController {
         this.restTemplate = restTemplate;
     }
 
+    @Audit
     @GetMapping("{id}")
     public ResponseEntity<String> getPost(@PathVariable Long id) {
         return restTemplate.getForEntity(BASE_URL + "posts/" + id, String.class);
     }
 
-    @PostMapping("")
+    @Audit
+    @PostMapping()
     public ResponseEntity<String> createPost(@RequestBody String post) {
         return restTemplate.postForEntity(BASE_URL + "posts", post, String.class);
     }
 
+    @Audit
     @PutMapping("{id}")
     public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody String post) {
         HttpHeaders headers = new HttpHeaders();
@@ -35,6 +38,7 @@ public class PostController {
         return restTemplate.exchange(BASE_URL + "posts/" + id, HttpMethod.PUT, requestEntity, String.class);
     }
 
+    @Audit
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         restTemplate.delete(BASE_URL + "posts/" + id);

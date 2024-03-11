@@ -1,6 +1,7 @@
 package org.example.controller;
 
 
+import org.example.audit.Audit;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,16 +18,19 @@ public class AlbumController {
         this.restTemplate = restTemplate;
     }
 
+    @Audit
     @GetMapping("{id}")
     public ResponseEntity<String> getAlbum(@PathVariable Long id) {
         return restTemplate.getForEntity(BASE_URL + "albums/" + id, String.class);
     }
 
+    @Audit
     @PostMapping("")
     public ResponseEntity<String> createAlbum(@RequestBody String post) {
         return restTemplate.postForEntity(BASE_URL + "albums", post, String.class);
     }
 
+    @Audit
     @PutMapping("{id}")
     public ResponseEntity<String> updateAlbum(@PathVariable Long id, @RequestBody String post) {
         HttpHeaders headers = new HttpHeaders();
@@ -35,6 +39,7 @@ public class AlbumController {
         return restTemplate.exchange(BASE_URL + "albums/" + id, HttpMethod.PUT, requestEntity, String.class);
     }
 
+    @Audit
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
         restTemplate.delete(BASE_URL + "albums/" + id);
