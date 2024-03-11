@@ -2,6 +2,8 @@ package org.example.controller;
 
 
 import org.example.audit.Audit;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +21,7 @@ public class AlbumController {
     }
 
     @Audit
+    @Cacheable("albums")
     @GetMapping("{id}")
     public ResponseEntity<String> getAlbum(@PathVariable Long id) {
         return restTemplate.getForEntity(BASE_URL + "albums/" + id, String.class);
@@ -40,6 +43,7 @@ public class AlbumController {
     }
 
     @Audit
+    @CacheEvict("albums")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
         restTemplate.delete(BASE_URL + "albums/" + id);
