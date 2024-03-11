@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,6 +22,10 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @WebMvcTest(PostController.class)
@@ -52,15 +58,54 @@ public class PostControllerTest {
                 "  \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\n" +
                 "  \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\n" +
                 "}";
+
         when(restTemplate.getForEntity(any(String.class), any())).thenReturn(ResponseEntity.ok().body(responseBody));
 
+        String expectedBody = "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto";
+        String expectedTitle = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit";
         // Выполнение запроса к контроллеру
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+        mockMvc.perform(get("/api/posts/1"))
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("sunt aut facere repellat provident occaecati excepturi optio reprehenderit"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.body").value("quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(expectedTitle))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.body").value(expectedBody));
     }
+
+    @Test
+    public void testPostPostController() throws Exception {
+        mockMvc.perform(post("/api/posts")
+                        .content("{}")
+                        .with(csrf())
+                        .with(user("admin").roles("ADMIN")))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+    @Test
+    @WithAnonymousUser
+    void cannotGetCustomerIfNotAuthorized() throws Exception {
+        mockMvc.perform(get("/api/posts/{id}", 1L))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testPutPostController() throws Exception {
+        mockMvc.perform(put("/api/posts/1")
+                        .content("{}")
+                        .with(csrf())
+                        .with(user("admin").roles("ADMIN")))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testDeletePostController() throws Exception {
+        mockMvc.perform(delete("/api/posts/1")
+                        .content("{}")
+                        .with(csrf())
+                        .with(user("admin").roles("ADMIN")))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
 
 }
