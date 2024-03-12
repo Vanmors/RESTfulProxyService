@@ -4,6 +4,7 @@ import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -70,9 +71,12 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .requestMatchers("/api/posts/**").hasAnyRole("POSTS", "ADMIN")
-                .requestMatchers("/api/users/**").hasAnyRole("USERS", "ADMIN")
-                .requestMatchers("/api/albums/**").hasAnyRole("ALBUMS", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/posts/**").hasAnyRole("POSTS_VIEWER")
+                .requestMatchers(HttpMethod.GET, "/api/albums/**").hasAnyRole("ALBUMS_VIEWER")
+                .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("USERS_VIEWER")
+                .requestMatchers("/api/posts/**").hasAnyRole("POSTS_EDITOR", "ADMIN")
+                .requestMatchers("/api/users/**").hasAnyRole("USERS_EDITOR", "ADMIN")
+                .requestMatchers("/api/albums/**").hasAnyRole("ALBUMS_EDITOR", "ADMIN")
                 .requestMatchers("/role").permitAll()
                 .requestMatchers("/user").permitAll()
                 .anyRequest().authenticated()

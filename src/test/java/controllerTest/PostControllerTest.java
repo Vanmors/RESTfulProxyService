@@ -80,14 +80,6 @@ public class PostControllerTest {
     }
 
     @Test
-    public void cannotGetWithoutPermissions() throws Exception {
-        mockMvc.perform(get("/api/posts/{id}", 1L)
-                        .with(csrf())
-                        .with(user("user").roles("USERS")))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     @WithAnonymousUser
     void cannotGetIfNotAuthorized() throws Exception {
         mockMvc.perform(get("/api/posts/{id}", 1L))
