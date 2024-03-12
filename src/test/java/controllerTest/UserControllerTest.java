@@ -1,7 +1,7 @@
 package controllerTest;
 
 import org.example.audit.AuditAspect;
-import org.example.controller.PostController;
+import org.example.controller.UserController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,9 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
-@WebMvcTest(PostController.class)
-@Import(PostController.class)
-public class PostControllerTest {
+@WebMvcTest(UserController.class)
+@Import(UserController.class)
+public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +37,7 @@ public class PostControllerTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private PostController postController;
+    private UserController userController;
 
     @Mock
     AuditAspect auditAspect;
@@ -49,54 +49,62 @@ public class PostControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testGetPostController() throws Exception {
+    public void testGetUsersController() throws Exception {
         String responseBody = "{\n" +
-                "  \"userId\": 1,\n" +
-                "  \"id\": 1,\n" +
-                "  \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\n" +
-                "  \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\n" +
+                "    \"id\": 1,\n" +
+                "    \"name\": \"Leanne Graham\",\n" +
+                "    \"username\": \"Bret\",\n" +
+                "    \"email\": \"Sincere@april.biz\",\n" +
+                "    \"address\": {\n" +
+                "        \"street\": \"Kulas Light\",\n" +
+                "        \"suite\": \"Apt. 556\",\n" +
+                "        \"city\": \"Gwenborough\",\n" +
+                "        \"zipcode\": \"92998-3874\",\n" +
+                "        \"geo\": {\n" +
+                "            \"lat\": \"-37.3159\",\n" +
+                "            \"lng\": \"81.1496\"\n" +
+                "        }\n" +
+                "    },\n" +
+                "    \"phone\": \"1-770-736-8031 x56442\",\n" +
+                "    \"website\": \"hildegard.org\",\n" +
+                "    \"company\": {\n" +
+                "        \"name\": \"Romaguera-Crona\",\n" +
+                "        \"catchPhrase\": \"Multi-layered client-server neural-net\",\n" +
+                "        \"bs\": \"harness real-time e-markets\"\n" +
+                "    }\n" +
                 "}";
 
         when(restTemplate.getForEntity(any(String.class), any())).thenReturn(ResponseEntity.ok().body(responseBody));
-
-        String expectedBody = "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto";
-        String expectedTitle = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit";
         // Выполнение запроса к контроллеру
-        mockMvc.perform(get("/api/posts/1"))
+        mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(expectedTitle))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.body").value(expectedBody));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Leanne Graham"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("Bret"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("Sincere@april.biz"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.phone").value("1-770-736-8031 x56442"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.website").value("hildegard.org"));
     }
 
     @Test
-    public void testPostPostController() throws Exception {
-        mockMvc.perform(post("/api/posts")
+    public void testPostUsersController() throws Exception {
+        mockMvc.perform(post("/api/users")
                         .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    public void cannotGetWithoutPermissions() throws Exception {
-        mockMvc.perform(get("/api/posts/{id}", 1L)
-                        .with(csrf())
-                        .with(user("user").roles("USERS")))
-                .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithAnonymousUser
     void cannotGetIfNotAuthorized() throws Exception {
-        mockMvc.perform(get("/api/posts/{id}", 1L))
+        mockMvc.perform(get("/api/users/{id}", 1L))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void testPutPostController() throws Exception {
-        mockMvc.perform(put("/api/posts/1")
+    public void testPutUsersController() throws Exception {
+        mockMvc.perform(put("/api/users/1")
                         .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
@@ -104,8 +112,8 @@ public class PostControllerTest {
     }
 
     @Test
-    public void testDeletePostController() throws Exception {
-        mockMvc.perform(delete("/api/posts/1")
+    public void testDeleteUsersController() throws Exception {
+        mockMvc.perform(delete("/api/users/1")
                         .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))

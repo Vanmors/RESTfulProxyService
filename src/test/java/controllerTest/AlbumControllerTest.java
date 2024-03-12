@@ -1,7 +1,7 @@
 package controllerTest;
 
 import org.example.audit.AuditAspect;
-import org.example.controller.PostController;
+import org.example.controller.AlbumController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,9 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
-@WebMvcTest(PostController.class)
-@Import(PostController.class)
-public class PostControllerTest {
+@WebMvcTest(AlbumController.class)
+@Import(AlbumController.class)
+public class AlbumControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +37,7 @@ public class PostControllerTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private PostController postController;
+    private AlbumController albumController;
 
     @Mock
     AuditAspect auditAspect;
@@ -49,54 +49,43 @@ public class PostControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testGetPostController() throws Exception {
+    public void testGetAlbumController() throws Exception {
         String responseBody = "{\n" +
                 "  \"userId\": 1,\n" +
                 "  \"id\": 1,\n" +
-                "  \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\n" +
-                "  \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\n" +
+                "  \"title\": \"quidem molestiae enim\",\n" +
                 "}";
 
         when(restTemplate.getForEntity(any(String.class), any())).thenReturn(ResponseEntity.ok().body(responseBody));
 
-        String expectedBody = "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto";
-        String expectedTitle = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit";
+        String expectedTitle = "quidem molestiae enim";
         // Выполнение запроса к контроллеру
-        mockMvc.perform(get("/api/posts/1"))
+        mockMvc.perform(get("/api/albums/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(expectedTitle))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.body").value(expectedBody));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(expectedTitle));
     }
 
     @Test
-    public void testPostPostController() throws Exception {
-        mockMvc.perform(post("/api/posts")
+    public void testPostAlbumController() throws Exception {
+        mockMvc.perform(post("/api/albums")
                         .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    public void cannotGetWithoutPermissions() throws Exception {
-        mockMvc.perform(get("/api/posts/{id}", 1L)
-                        .with(csrf())
-                        .with(user("user").roles("USERS")))
-                .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithAnonymousUser
     void cannotGetIfNotAuthorized() throws Exception {
-        mockMvc.perform(get("/api/posts/{id}", 1L))
+        mockMvc.perform(get("/api/albums/{id}", 1L))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void testPutPostController() throws Exception {
-        mockMvc.perform(put("/api/posts/1")
+    public void testPutAlbumController() throws Exception {
+        mockMvc.perform(put("/api/albums/1")
                         .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
@@ -104,8 +93,8 @@ public class PostControllerTest {
     }
 
     @Test
-    public void testDeletePostController() throws Exception {
-        mockMvc.perform(delete("/api/posts/1")
+    public void testDeleteAlbumController() throws Exception {
+        mockMvc.perform(delete("/api/albums/1")
                         .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
