@@ -10,11 +10,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -23,31 +20,6 @@ public class SecurityConfig {
 
     @Autowired
     UserService userService;
-
-//    @Bean
-//    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-//        UserDetails user1 = User.builder()
-//                .username("Ivan")
-//                .password(passwordEncoder().encode("Postman"))
-//                .roles("POSTS")
-//                .build();
-//        UserDetails user2 = User.builder()
-//                .username("Nad")
-//                .password(passwordEncoder().encode("Userman"))
-//                .roles("USERS")
-//                .build();
-//        UserDetails user3 = User.builder()
-//                .username("Mike")
-//                .password(passwordEncoder().encode("Albumman"))
-//                .roles("ALBUMS")
-//                .build();
-//        UserDetails user4 = User.builder()
-//                .username("VK")
-//                .password(passwordEncoder().encode("Adminman"))
-//                .roles("ADMIN")
-//                .build();
-//        return new InMemoryUserDetailsManager(user1, user2, user3, user4);
-//    }
 
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
@@ -66,17 +38,16 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
-                .csrf()
-                .disable()
+                .cors().and()
+                .csrf().disable()
                 .authorizeRequests()
-                .requestMatchers(HttpMethod.GET, "/api/posts/**").hasAnyRole("POSTS_VIEWER")
-                .requestMatchers(HttpMethod.GET, "/api/albums/**").hasAnyRole("ALBUMS_VIEWER")
-                .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("USERS_VIEWER")
+                .requestMatchers(HttpMethod.GET, "/api/posts/**").hasAnyRole("POSTS_VIEWER", "POSTS_EDITOR", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/albums/**").hasAnyRole("ALBUMS_VIEWER", "USERS_EDITOR", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("USERS_VIEWER", "ALBUMS_EDITOR", "ADMIN")
                 .requestMatchers("/api/posts/**").hasAnyRole("POSTS_EDITOR", "ADMIN")
                 .requestMatchers("/api/users/**").hasAnyRole("USERS_EDITOR", "ADMIN")
                 .requestMatchers("/api/albums/**").hasAnyRole("ALBUMS_EDITOR", "ADMIN")
+                .requestMatchers("/ws").hasRole("POSTS_EDITOR")
                 .requestMatchers("/role").permitAll()
                 .requestMatchers("/user").permitAll()
                 .anyRequest().authenticated()

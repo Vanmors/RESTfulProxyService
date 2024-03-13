@@ -1,7 +1,6 @@
-package controllerTest;
+package org.example.controller;
 
 import org.example.audit.AuditAspect;
-import org.example.controller.AlbumController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

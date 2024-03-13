@@ -6,8 +6,8 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @EnableCaching
-public class RESTfulProxyService {
+public class Main {
     public static void main(String[] args) {
-        SpringApplication.run(RESTfulProxyService.class, args);
+        SpringApplication.run(Main.class, args);
     }
 }
