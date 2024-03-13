@@ -69,7 +69,10 @@ public class AlbumControllerTest {
     @Test
     public void testPostAlbumController() throws Exception {
         mockMvc.perform(post("/api/albums")
-                        .content("{}")
+                        .content("{\n" +
+                                "    \"userId\": 1,\n" +
+                                "    \"title\": \"omnis laborum odio\"\n" +
+                                "}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -85,7 +88,11 @@ public class AlbumControllerTest {
     @Test
     public void testPutAlbumController() throws Exception {
         mockMvc.perform(put("/api/albums/1")
-                        .content("{}")
+                        .content("{\n" +
+                                "    \"userId\": 1,\n" +
+                                "    \"id\": 3,\n" +
+                                "    \"title\": \"omnis laborum odio\"\n" +
+                                "}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -94,7 +101,6 @@ public class AlbumControllerTest {
     @Test
     public void testDeleteAlbumController() throws Exception {
         mockMvc.perform(delete("/api/albums/1")
-                        .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());

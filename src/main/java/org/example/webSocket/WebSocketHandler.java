@@ -1,5 +1,6 @@
 package org.example.webSocket;
 
+import org.example.audit.Audit;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -17,7 +18,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final WebSocketClient client = new StandardWebSocketClient();
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
     @Override
-
+    @Audit
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         sessions.add(session);
         WebSocketSession echoSession = client.execute(new EchoHandler(sessions), "wss://echo.websocket.org").get();

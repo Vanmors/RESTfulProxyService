@@ -88,7 +88,12 @@ public class UserControllerTest {
     @Test
     public void testPostUsersController() throws Exception {
         mockMvc.perform(post("/api/users")
-                        .content("{}")
+                        .content("{   \"name\": \"Ervin Howell\",\n" +
+                                "    \"username\": \"Antonette\",\n" +
+                                "    \"email\": \"Shanna@melissa.tv\",\n" +
+                                "    \n" +
+                                "    \"phone\": \"010-692-6593 x09125\",\n" +
+                                "    \"website\": \"anastasia.net\"}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -104,7 +109,13 @@ public class UserControllerTest {
     @Test
     public void testPutUsersController() throws Exception {
         mockMvc.perform(put("/api/users/1")
-                        .content("{}")
+                        .content("{    \"id\": 2,\n" +
+                                "    \"name\": \"Ervin Howell\",\n" +
+                                "    \"username\": \"Antonette\",\n" +
+                                "    \"email\": \"Shanna@melissa.tv\",\n" +
+                                "    \n" +
+                                "    \"phone\": \"010-692-6593 x09125\",\n" +
+                                "    \"website\": \"anastasia.net\"}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -113,7 +124,6 @@ public class UserControllerTest {
     @Test
     public void testDeleteUsersController() throws Exception {
         mockMvc.perform(delete("/api/users/1")
-                        .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());

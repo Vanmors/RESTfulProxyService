@@ -72,7 +72,9 @@ public class PostControllerTest {
     @Test
     public void testPostPostController() throws Exception {
         mockMvc.perform(post("/api/posts")
-                        .content("{}")
+                        .content("{\"userId\": 1,\n" +
+                                "    \"title\": \"qui est esse\",\n" +
+                                "    \"body\": \"est rerum tempore \"}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -88,7 +90,9 @@ public class PostControllerTest {
     @Test
     public void testPutPostController() throws Exception {
         mockMvc.perform(put("/api/posts/1")
-                        .content("{}")
+                        .content("{\"userId\": 1,\n" +
+                                "    \"title\": \"qui est esse\",\n" +
+                                "    \"body\": \"est rerum tempore \"}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -97,7 +101,6 @@ public class PostControllerTest {
     @Test
     public void testDeletePostController() throws Exception {
         mockMvc.perform(delete("/api/posts/1")
-                        .content("{}")
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());

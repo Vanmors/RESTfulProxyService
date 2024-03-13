@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.audit.Audit;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class PostController {
     }
 
     @Audit
+    @CachePut("posts")
     @PutMapping("{id}")
     public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody String post) {
         HttpHeaders headers = new HttpHeaders();
