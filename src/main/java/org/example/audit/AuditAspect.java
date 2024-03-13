@@ -24,7 +24,6 @@ public class AuditAspect {
     private AuthenticationFacade authenticationFacade;
 
     @Around("@annotation(audit)")
-    @Transactional
     public Object audit(ProceedingJoinPoint joinPoint, Audit audit) throws Throwable {
         String username = authenticationFacade.getUsername();
         String action = joinPoint.getSignature().toShortString();

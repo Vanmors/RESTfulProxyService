@@ -47,7 +47,7 @@ public class AlbumControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "albumViewer", roles = {"ALBUMS_VIEWER"})
     public void testGetAlbumController() throws Exception {
         String responseBody = "{\n" +
                 "  \"userId\": 1,\n" +
@@ -94,7 +94,7 @@ public class AlbumControllerTest {
                                 "    \"title\": \"omnis laborum odio\"\n" +
                                 "}")
                         .with(csrf())
-                        .with(user("admin").roles("ADMIN")))
+                        .with(user("albumEditor").roles("ALBUMS_EDITOR")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

@@ -47,7 +47,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "postViewer", roles = {"POSTS_VIEWER"})
     public void testGetPostController() throws Exception {
         String responseBody = "{\n" +
                 "  \"userId\": 1,\n" +
@@ -94,7 +94,7 @@ public class PostControllerTest {
                                 "    \"title\": \"qui est esse\",\n" +
                                 "    \"body\": \"est rerum tempore \"}")
                         .with(csrf())
-                        .with(user("admin").roles("ADMIN")))
+                        .with(user("postEditor").roles("POSTS_EDITOR")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

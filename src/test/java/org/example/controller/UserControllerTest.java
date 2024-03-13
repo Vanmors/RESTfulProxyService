@@ -47,7 +47,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "userViewer", roles = {"USERS_VIEWER"})
     public void testGetUsersController() throws Exception {
         String responseBody = "{\n" +
                 "    \"id\": 1,\n" +
@@ -117,7 +117,7 @@ public class UserControllerTest {
                                 "    \"phone\": \"010-692-6593 x09125\",\n" +
                                 "    \"website\": \"anastasia.net\"}")
                         .with(csrf())
-                        .with(user("admin").roles("ADMIN")))
+                        .with(user("userEditor").roles("USERS_EDITOR")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
