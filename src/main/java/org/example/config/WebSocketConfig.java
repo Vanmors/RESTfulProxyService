@@ -1,6 +1,5 @@
 package org.example.config;
 
-import org.example.audit.Audit;
 import org.example.webSocket.WebSocketHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
