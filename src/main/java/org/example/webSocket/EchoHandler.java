@@ -4,21 +4,34 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.io.IOException;
+import java.util.List;
 
 @Component
-public class EchoHandler extends TextWebSocketHandler {
+public class EchoHandler extends WebSocketHandler {
+    List<WebSocketSession> sessions;
+
+    public EchoHandler(List<WebSocketSession> sessions) {
+        this.sessions = sessions;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
-        System.out.println("Connection established with Echo server");
     }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         // Получаем ответное сообщение от сервера
         String response = (String) message.getPayload();
-        System.out.println("Response from server: " + response);
+        processAndSendRequestToOtherServer(response);
     }
+
+
+    private void processAndSendRequestToOtherServer(String request) throws IOException {
+        // Отправляем ответ обратно
+        if (!sessions.isEmpty()) sessions.get(0).sendMessage(new TextMessage(request));
+    }
+
 }

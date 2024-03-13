@@ -45,3 +45,4 @@ java -jar target/T1TestTask-0.0.1-SNAPSHOT.jar
 Для их создания реализован [UserCreateController](./src/main/java/org/example/controller/UserCreateController.java)
 и [RoleController](./src/main/java/org/example/controller/RoleController.java)
 7. Написанны [тесты](./src/test/java/org/example) для контроллеров, проксирущих запросы.
+8. Реализованна конечная точка для запросов по [websocket](./src/main/java/org/example/webSocket)
