@@ -75,7 +75,7 @@ public class UserControllerTest {
 
         when(restTemplate.getForEntity(any(String.class), any())).thenReturn(ResponseEntity.ok().body(responseBody));
         // Выполнение запроса к контроллеру
-        mockMvc.perform(get("/api/users/1"))
+        mockMvc.perform(get("/api/users/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Leanne Graham"))
@@ -108,7 +108,7 @@ public class UserControllerTest {
 
     @Test
     public void testPutUsersController() throws Exception {
-        mockMvc.perform(put("/api/users/1")
+        mockMvc.perform(put("/api/users/{id}", 2L)
                         .content("{    \"id\": 2,\n" +
                                 "    \"name\": \"Ervin Howell\",\n" +
                                 "    \"username\": \"Antonette\",\n" +
@@ -123,7 +123,7 @@ public class UserControllerTest {
 
     @Test
     public void testDeleteUsersController() throws Exception {
-        mockMvc.perform(delete("/api/users/1")
+        mockMvc.perform(delete("/api/users/{id}", 1L)
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());

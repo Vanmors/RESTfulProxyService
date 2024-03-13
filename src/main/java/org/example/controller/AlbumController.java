@@ -24,7 +24,7 @@ public class AlbumController {
     @Audit
     @Cacheable("albums")
     @GetMapping("{id}")
-    public ResponseEntity<String> getAlbum(@PathVariable Long id) {
+    public ResponseEntity<String> getAlbum(@PathVariable("id") Long id) {
         return restTemplate.getForEntity(BASE_URL + "albums/" + id, String.class);
     }
 
@@ -37,7 +37,7 @@ public class AlbumController {
     @Audit
     @CachePut("albums")
     @PutMapping("{id}")
-    public ResponseEntity<String> updateAlbum(@PathVariable Long id, @RequestBody String post) {
+    public ResponseEntity<String> updateAlbum(@PathVariable("id") Long id, @RequestBody String post) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(post, headers);
@@ -47,7 +47,7 @@ public class AlbumController {
     @Audit
     @CacheEvict("albums")
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAlbum(@PathVariable("id") Long id) {
         restTemplate.delete(BASE_URL + "albums/" + id);
         return ResponseEntity.noContent().build();
     }

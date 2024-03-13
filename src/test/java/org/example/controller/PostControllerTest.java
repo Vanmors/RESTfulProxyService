@@ -61,7 +61,7 @@ public class PostControllerTest {
         String expectedBody = "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto";
         String expectedTitle = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit";
         // Выполнение запроса к контроллеру
-        mockMvc.perform(get("/api/posts/1"))
+        mockMvc.perform(get("/api/posts/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
@@ -89,7 +89,7 @@ public class PostControllerTest {
 
     @Test
     public void testPutPostController() throws Exception {
-        mockMvc.perform(put("/api/posts/1")
+        mockMvc.perform(put("/api/posts/{id}", 1L)
                         .content("{\"userId\": 1,\n" +
                                 "    \"title\": \"qui est esse\",\n" +
                                 "    \"body\": \"est rerum tempore \"}")
@@ -100,7 +100,7 @@ public class PostControllerTest {
 
     @Test
     public void testDeletePostController() throws Exception {
-        mockMvc.perform(delete("/api/posts/1")
+        mockMvc.perform(delete("/api/posts/{id}", 1L)
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());

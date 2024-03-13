@@ -59,7 +59,7 @@ public class AlbumControllerTest {
 
         String expectedTitle = "quidem molestiae enim";
         // Выполнение запроса к контроллеру
-        mockMvc.perform(get("/api/albums/1"))
+        mockMvc.perform(get("/api/albums/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
@@ -100,7 +100,7 @@ public class AlbumControllerTest {
 
     @Test
     public void testDeleteAlbumController() throws Exception {
-        mockMvc.perform(delete("/api/albums/1")
+        mockMvc.perform(delete("/api/albums/{id}", 1L)
                         .with(csrf())
                         .with(user("admin").roles("ADMIN")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());

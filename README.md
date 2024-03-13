@@ -39,10 +39,10 @@ mvn clean install
 Запуск приложения с помощью команды:
 
 ```bash
-java -jar target/T1TestTask-0.0.1-SNAPSHOT.jar
+java -jar target/RESTfulProxyService-0.0.1-SNAPSHOT.jar
 ```
 6. Пользователи и их роли хранятся в базе данных.  
 Для их создания реализован [UserCreateController](./src/main/java/org/example/controller/UserCreateController.java)
 и [RoleController](./src/main/java/org/example/controller/RoleController.java)
-7. Написанны [тесты](./src/test/java/org/example) для контроллеров, проксирущих запросы.
+7. Написанны [тесты](./src/test/java/org/example) для контроллеров и для аудита.
 8. Реализована конечная точка для запросов по [websocket](./src/main/java/org/example/webSocket)

@@ -23,7 +23,7 @@ public class UserController {
     @Audit
     @Cacheable("users")
     @GetMapping("{id}")
-    public ResponseEntity<String> getUser(@PathVariable Long id) {
+    public ResponseEntity<String> getUser(@PathVariable("id") Long id) {
         return restTemplate.getForEntity(BASE_URL + "users/" + id, String.class);
     }
 
@@ -36,7 +36,7 @@ public class UserController {
     @Audit
     @CachePut("users")
     @PutMapping("{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody String post) {
+    public ResponseEntity<String> updateUser(@PathVariable("id") Long id, @RequestBody String post) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(post, headers);
@@ -46,7 +46,7 @@ public class UserController {
     @Audit
     @CacheEvict("users")
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         restTemplate.delete(BASE_URL + "users/" + id);
         return ResponseEntity.noContent().build();
     }
